@@ -1,0 +1,1 @@
+docker run -p 80:80 -v C:\Users\ngohu\OneDrive\Documents\51800571_NgoHuuLe\www:/app --name web webdevops/php-apache-dev
