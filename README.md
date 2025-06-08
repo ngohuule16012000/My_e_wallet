@@ -2,88 +2,50 @@
 ## Cấu trúc thư mục dự án MVC PHP
 
 ```
-www/
-└── mymvc/
-    ├── index.php                  ← File chính để route
-    ├── .htaccess                  ← (Tùy chọn) Viết lại URL
-    ├── app/
-    │   ├── controllers/
-    │   │   └── HomeController.php
-    │   ├── models/
-    │   │   └── Product.php
-    │   └── views/
-    │       ├── home.php
-    │       └── layout.php
+My_e_wallet/
+└── www/
+    ├── index.php                
+    ├── .htaccess             
+    ├── .dockerignore                
+    ├── compose-dev.yaml               
+    ├── Dockerfile               
+    ├── main.js              
+    ├── style.css                
+    ├── admin/
+    │   └── db.php
+    ├── controllers/
+    │   ├── AdminController.php
+    │   ├── BaseController.php
+    │   ├── HomeController.php
+    │   ├── LoginController.php
+    │   └── RegisterController.php
     ├── core/
-    │   ├── App.php                ← Xử lý routing
-    │   └── Controller.php         ← Class cha cho tất cả Controller
-    ├── public/
-    │   ├── css/
-    │   └── js/
-    └── config/
-        └── config.php             ← Kết nối database
+    │   ├── database.php        
+    │   └── vendor/
+    │       ├── autoload.php
+    │       ├── composer/...
+    │       └── phpmailer/...       
+    ├── images/...
+    ├── Models
+    │   ├── AdminModel.php
+    │   ├── BaseModel.php
+    │   ├── CreditModel.php
+    │   ├── HomeModel.php
+    │   ├── LoginModel.php
+    │   ├── PhonecardModel.php
+    │   └── RegisterModel.php
+    ├── public
+    │   └── upload/...
+    └── Views/
+        ├── head.php
+        ├── linkJS.php
+        ├── home/...
+        ├── login/...
+        ├── register/...
+        └── admin/...
 ```
 
----
-
-### ⚙️ 3. Quy trình hoạt động MVC
-
-1. Truy cập URL `http://localhost/mymvc/index.php?url=home/index`
-2. `index.php` gọi `App.php` để phân tích URL và gọi `HomeController.php`
-3. `HomeController.php` xử lý logic, gọi `Model` nếu cần, rồi trả `View`
-4. `home.php` hiển thị nội dung giao diện
-
----
-
-### 🧩 4. Ví dụ đơn giản
-
-#### 📄 `index.php`
-
-```php
-require_once 'core/App.php';
-require_once 'core/Controller.php';
-
-$app = new App();
-```
-
-#### 📄 `core/App.php` (tối giản)
-
-```php
-class App {
-    protected $controller = 'HomeController';
-    protected $method = 'index';
-    protected $params = [];
-
-    public function __construct() {
-        $url = $this->parseUrl();
-        if(file_exists('app/controllers/' . ucfirst($url[0]) . 'Controller.php')) {
-            $this->controller = ucfirst($url[0]) . 'Controller';
-            unset($url[0]);
-        }
-        require_once 'app/controllers/' . $this->controller . '.php';
-        $this->controller = new $this->controller;
-
-        if(isset($url[1])) {
-            if(method_exists($this->controller, $url[1])) {
-                $this->method = $url[1];
-                unset($url[1]);
-            }
-        }
-        $this->params = $url ? array_values($url) : [];
-        call_user_func_array([$this->controller, $this->method], $this->params);
-    }
-
-    public function parseUrl() {
-        if(isset($_GET['url'])) {
-            return explode('/', filter_var(rtrim($_GET['url'], '/'), FILTER_SANITIZE_URL));
-        }
-    }
-}
-```
-
----
-
-### ✅ 5. Lợi ích sử dụng MVC với PHP thuần
+## Lợi ích sử dụng MVC với PHP thuần
 
 * Dễ tổ chức và phân chia công việc (nhất là khi làm team)
 * Tách riêng giữa **xử lý**, **giao diện** và **dữ liệu**
